@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body style="background-color: rgba(197, 210, 233, 0.897);">
+  <div class="container mt-5 w-50">
+    <div class="row">
+      <div class="col-8 bg-primary">
+        <div class="card bg-primary w-100 border-0">
+          <h2 class="mt-3 ms-3 mb-0 p-3">WEATHER</h2>
+          <img style="height:8=300px; width:300px;" class="card-img-top " src="./image.png" alt="Card image">
+          <div class="card-body m-0 p-0">
+            <div id="card" class="card-text ms-5 h-50">
+              <p>Temperature</p>
+              <h4>City name</h4>
+            </div>
+            <div class="ms-5 mb-5 mt-5">
+             <img style="height:40px; width:40px;" src="./sunny.jpg" class="rounded-circle" alt="sunny weather">
+              <img style="height:40px; width:40px;" src="./night.png" class="rounded-circle" alt="night weather">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-4 bg-success bg-opacity-50">
+        <form>
+          <input type="text" id="cname" class="form-control bg-transparent mt-3 border-0 " placeholder="enter city">
+          <button type="button" class="btn text-white mt-2 w-50 border" onclick="search()">search</button>
+        </form>
+        <br>
+
+        <h5>Weather Details</h5>
+        <br>
+        <div class="text-white">country</div><br>
+        <div id="coun">.</div>
+        <br>
+        <div class="text-white">humidity</div><br>
+        <div id="hum">.</div>
+        <br>
+        <div class="text-white">wind</div><br>
+        <div id="wd">.</div>
+        <br>
+        <div class="text-white">pressure</div><br>
+        <div id="prs">.</div>
+        <br>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function search() {
+    city = cname.value
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5fe36b192ffd1c36dffb6752bc1722b2`)
+      .then(data => data.json())
+      .then(data => displayData(data))
+
+    function displayData(wdata) {
+      temp = ((wdata.main.temp) - 273.15).toFixed(1)
+      desc = wdata.weather[0].description
+      feels = ((wdata.main.feels_like) - 273.15).toFixed(1)
+      cityname = wdata.name
+      var dt = Date();
+      country = wdata.sys.country
+      humidity = wdata.main.humidity
+      wind = wdata.wind.speed
+      pressure = wdata.main.pressure
+
+      card.innerHTML = `
+      <h3>${temp} C,<small>${desc}</small></h3>
+      <p>feels like ${feels}</p>
+      <h4>${cityname}</h4>
+      <p>${dt}</p>
+      `
+      coun.innerHTML = country
+      hum.innerHTML = `${humidity}%`
+      wd.innerHTML = `${wind} Kmph`
+      prs.innerHTML = pressure
+    }
+  }
+</script>
+</html>
